@@ -4,26 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
-@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-
+@Builder
+@Entity
+@Table(name = "audity")
+public class Audity {
     private Long id;
-    private String name;
-    private String lastname;
-    private String document;
-    private LocalDate birth;
-    private boolean active;
-    private String typeUser;
-    private String bankAccount;
+    private String nameEntity;
+    private String action;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 }
