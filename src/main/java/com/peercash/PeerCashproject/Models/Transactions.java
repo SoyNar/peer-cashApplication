@@ -1,9 +1,8 @@
 package com.peercash.PeerCashproject.Models;
 
-import com.peercash.PeerCashproject.Enums.StatusTransaction;
+import com.peercash.PeerCashproject.Enums.StatusT;
 import com.peercash.PeerCashproject.Enums.TypeTransaction;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -17,13 +16,31 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "transactions" )
 public class Transactions {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private TypeTransaction typeTransaction;
+
+    @Column(nullable = false)
     private BigDecimal amount;
+
+    @Column(nullable = false)
     private LocalDateTime dateTransaction;
-    private StatusTransaction statusTransaction;
+
+    @Column(nullable = false)
+    private StatusT statusTransaction;
+
+    @Column(nullable = false)
     private String description;
+
+    @Column(nullable = false)
     private String reference;
+
+    @Column(nullable = false)
     private String paymentMethod;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
