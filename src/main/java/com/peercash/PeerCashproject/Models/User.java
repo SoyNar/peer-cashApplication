@@ -47,15 +47,15 @@ public class User {
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Loans> loans;
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "qualified",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratingsQualified;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "qualifying",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rating> ratingsQualifying;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transactions> transactions;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<AuditEntity> auditEntities;
 }

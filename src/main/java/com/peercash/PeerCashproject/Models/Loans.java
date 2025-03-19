@@ -46,9 +46,9 @@ public class Loans {
     @Column(nullable = false)
     private BigDecimal platformCommission;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "applicant_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Applicant applicant;
 
     @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Investment> investments;

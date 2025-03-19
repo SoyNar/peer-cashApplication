@@ -32,8 +32,8 @@ public class Investment {
     private BigDecimal amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "investment_user_id")
-    private User user;
+    @JoinColumn(name = "investor_id")
+    private Investor investor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loan_id")
