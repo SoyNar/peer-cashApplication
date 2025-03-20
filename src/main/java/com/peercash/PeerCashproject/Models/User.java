@@ -36,8 +36,6 @@ public class User {
 
     private boolean active;
 
-    private String typeUser;
-
     private String bankAccount;
    @ManyToMany
    @JoinTable(name="role_users",
