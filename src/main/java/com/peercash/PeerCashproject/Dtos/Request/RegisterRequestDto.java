@@ -18,6 +18,7 @@ public class RegisterRequestDto {
     private String lastname;
     private LocalDate birthday;
     private String bankAccount;
-    private List<Role> roles;
+    private String userType;
+    private List<String> roles;
 
 }

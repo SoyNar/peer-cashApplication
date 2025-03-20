@@ -31,7 +31,8 @@ public class UserServiceImpl implements IUserService {
           throw new UserAlreadyExistException("Error: Usuario ya existe");
       }
 
-      Role role = this.roleRepository.findByName(String.valueOf(requestDto.getRoles())).orElseThrow(()
+      String roleName = requestDto.getUserType().equals("INVESTOR") ? "ROLE_INVESTOR": "ROLE_APPLICANT";
+      Role role = this.roleRepository.findByName(roleName).orElseThrow(()
               -> new RoleNotFoundException("Error: Rol no existe"));
 
       List<Role> rolesUser = new ArrayList<>();
@@ -47,6 +48,7 @@ public class UserServiceImpl implements IUserService {
               .lastname(requestDto.getLastname())
               .roles(rolesUser)
               .build();
+      this.userRepository.save(createUser);
 
         return builderRegisterResponseDto(createUser);
     }

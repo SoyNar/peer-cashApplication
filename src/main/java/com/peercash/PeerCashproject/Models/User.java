@@ -1,5 +1,6 @@
 package com.peercash.PeerCashproject.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -41,6 +42,7 @@ public class User {
 
     private String bankAccount;
    @ManyToMany
+   @JsonManagedReference
    @JoinTable(name="role_users",
            joinColumns={@JoinColumn(name="user_id")},
            inverseJoinColumns={@JoinColumn(name="role_id")})
