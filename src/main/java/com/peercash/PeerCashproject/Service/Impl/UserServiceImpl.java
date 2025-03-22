@@ -14,11 +14,13 @@ import com.peercash.PeerCashproject.Utils.Auditable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +28,14 @@ public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CloudinaryService cloudinaryService;
 
     @Auditable(action = "REGISTER_USER", entity = "User")
     @Transactional
     @Override
-    public RegisterResponseDto registerUser(RegisterRequestDto requestDto) {
+    public RegisterResponseDto registerUser(RegisterRequestDto requestDto,
+                                            MultipartFile documentImage,
+                                            MultipartFile bankStatementImage) {
 
       var user =   this.userRepository.findByEmail(requestDto.getEmail());
 
@@ -38,28 +43,41 @@ public class UserServiceImpl implements IUserService {
           throw new UserAlreadyExistException("Error: Usuario ya existe");
       }
       confirmData(requestDto);
+      validateFile(documentImage);
+      validateFile(bankStatementImage);
+        try {
+            Map documentResult = cloudinaryService.uploadFile(documentImage, "user_document");
+            Map bankStatementResult = cloudinaryService.uploadFile(bankStatementImage, "bank_statements");
 
-      String roleName = requestDto.getUserType().equals("INVESTOR") ? "ROLE_INVESTOR": "ROLE_APPLICANT";
-      Role role = this.roleRepository.findByName(roleName).orElseThrow(()
-              -> new RoleNotFoundException("Error: Rol no existe"));
+            String documentUrl = documentResult.get("url").toString();
+            String bankStatementUrl = bankStatementResult.get("url").toString();
 
-      List<Role> rolesUser = new ArrayList<>();
-      rolesUser.add(role);
-      User createUser = User.builder()
-              .email(requestDto.getEmail())
-              .active(true)
-              .bankAccount(requestDto.getBankAccount())
-              .birthday(requestDto.getBirthday())
-              .document(requestDto.getDocument())
-              .email(requestDto.getEmail())
-              .name(requestDto.getName())
-              .lastname(requestDto.getLastname())
-              .roles(rolesUser)
-              .city(requestDto.getCity())
-              .build();
-      this.userRepository.save(createUser);
+            String roleName = requestDto.getUserType().equals("INVESTOR") ? "ROLE_INVESTOR": "ROLE_APPLICANT";
+            Role role = this.roleRepository.findByName(roleName).orElseThrow(()
+                    -> new RoleNotFoundException("Error: Rol no existe"));
 
-        return builderRegisterResponseDto(createUser);
+            List<Role> rolesUser = new ArrayList<>();
+            rolesUser.add(role);
+            User createUser = User.builder()
+                    .email(requestDto.getEmail())
+                    .active(false)
+                    .bankAccount(requestDto.getBankAccount())
+                    .birthday(requestDto.getBirthday())
+                    .document(requestDto.getDocument())
+                    .email(requestDto.getEmail())
+                    .name(requestDto.getName())
+                    .lastname(requestDto.getLastname())
+                    .roles(rolesUser)
+                    .city(requestDto.getCity())
+                    .documentUrl(documentUrl)
+                    .accountBankUrl(bankStatementUrl)
+                    .build();
+            this.userRepository.save(createUser);
+
+            return builderRegisterResponseDto(createUser);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al procesar archivos: " + e.getMessage(), e);
+        }
     }
 
 
@@ -81,6 +99,20 @@ public class UserServiceImpl implements IUserService {
             throw new IBadRequestExceptions("Edad inválida. Debe ser mayor de edad.");
         }
 
+    }
+
+    private void validateFile(MultipartFile file) {
+        if (file.getSize() > 5 * 1024 * 1024) {
+            throw new RuntimeException("El archivo excede el tamaño máximo permitido (5MB)");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null ||
+                !(contentType.equals("image/jpeg") ||
+                        contentType.equals("image/png") ||
+                        contentType.equals("application/pdf"))) {
+            throw new RuntimeException("Tipo de archivo no permitido. Use JPG, PNG o PDF");
+        }
     }
 
 }
