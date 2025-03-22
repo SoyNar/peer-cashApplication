@@ -20,6 +20,7 @@ public class Transactions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private TypeTransaction typeTransaction;
 
     @Column(nullable = false)
@@ -29,6 +30,7 @@ public class Transactions {
     private LocalDateTime dateTransaction;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private StatusT statusTransaction;
 
     @Column(nullable = false)

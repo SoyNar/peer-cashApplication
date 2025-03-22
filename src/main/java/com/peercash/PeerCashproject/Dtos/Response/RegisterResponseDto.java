@@ -18,5 +18,5 @@ public class RegisterResponseDto {
     private String name;
     private String lastname;
     private LocalDate birthday;
-    private String roles;
+
 }

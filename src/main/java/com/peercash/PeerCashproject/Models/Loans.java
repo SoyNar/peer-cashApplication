@@ -27,6 +27,7 @@ public class Loans {
     private LocalDate dateApproval;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private StatusT statusTransaction;
 
     @Column(nullable = false)

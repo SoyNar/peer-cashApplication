@@ -32,13 +32,17 @@ public class User {
     @Column(nullable = false)
     private String lastname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String document;
 
     @Column(nullable = false)
     private LocalDate birthday;
 
+    private String documentUrl;
+    private String accountBankUrl;
+
     private boolean active;
+    private String city;
 
     private String bankAccount;
    @ManyToMany
