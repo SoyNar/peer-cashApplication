@@ -1,11 +1,13 @@
 package com.peercash.PeerCashproject.Service.Impl;
 import com.peercash.PeerCashproject.Dtos.Response.DeleteUserResponseDto;
 import com.peercash.PeerCashproject.Dtos.Response.GetAllUsersDto;
+import com.peercash.PeerCashproject.Dtos.Response.GetAuditDto;
 import com.peercash.PeerCashproject.Exceptions.Custom.UserNotFondException;
+import com.peercash.PeerCashproject.Models.AuditEntity;
 import com.peercash.PeerCashproject.Models.User;
 import com.peercash.PeerCashproject.Repository.AuditRepository;
 import com.peercash.PeerCashproject.Repository.UserRepository;
-import com.peercash.PeerCashproject.Service.IAdminService;
+import com.peercash.PeerCashproject.Service.IService.IAdminService;
 import com.peercash.PeerCashproject.Utils.Auditable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,6 +58,28 @@ public class AdminServiceImpl implements IAdminService {
                 .email(user.getEmail())
                 .id(user.getId())
                 .name(user.getName())
+                .build();
+    }
+
+    @Override
+    public List<GetAuditDto> getAllAudit() {
+        List<AuditEntity> auditEntities = this.auditRepository.findAll();
+
+        return auditEntities.stream().map(this::mapToGetAllAudit)
+                .collect(Collectors.toList());
+    }
+
+    private GetAuditDto mapToGetAllAudit(AuditEntity auditEntity){
+        return GetAuditDto.builder()
+                .description(auditEntity.getDescription())
+                .id(auditEntity.getId())
+                .details(auditEntity.getDetails())
+                .status(auditEntity.getStatus())
+                .updateAt(auditEntity.getUpdateAt().toString())
+                .ipAddress(auditEntity.getIpAddress())
+                .userAgent(auditEntity.getUserAgent())
+                .action(auditEntity.getAction())
+                .entity(auditEntity.getNameEntity())
                 .build();
     }
 }

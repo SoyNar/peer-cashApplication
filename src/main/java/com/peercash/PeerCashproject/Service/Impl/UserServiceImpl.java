@@ -9,7 +9,7 @@ import com.peercash.PeerCashproject.Models.Role;
 import com.peercash.PeerCashproject.Models.User;
 import com.peercash.PeerCashproject.Repository.RoleRepository;
 import com.peercash.PeerCashproject.Repository.UserRepository;
-import com.peercash.PeerCashproject.Service.IUserService;
+import com.peercash.PeerCashproject.Service.IService.IUserService;
 import com.peercash.PeerCashproject.Utils.Auditable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -2,6 +2,7 @@ package com.peercash.PeerCashproject.Config;
 
 import com.cloudinary.Cloudinary;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class CloudinaryConfig {
@@ -22,10 +24,14 @@ public class CloudinaryConfig {
 
     @Bean
     public Cloudinary cloudinary(){
-        Map<String, String> config = new HashMap<>();
+        log.info("api_key {}",apiKey);
+        log.info("api_secret {}",secretKey);
+        log.info("cloud_name {}", cloudName);
+
+        Map<String, Object> config = new HashMap<>();
         config.put("cloud_name",cloudName);
-        config.put("apy_key",apiKey);
-        config.put("secret_key", secretKey);
+        config.put("api_key",apiKey);
+        config.put("api_secret", secretKey);
         return new Cloudinary(config);
     }
 }

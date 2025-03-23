@@ -2,7 +2,7 @@ package com.peercash.PeerCashproject.Controllers;
 
 import com.peercash.PeerCashproject.Dtos.Request.RegisterRequestDto;
 import com.peercash.PeerCashproject.Dtos.Response.RegisterResponseDto;
-import com.peercash.PeerCashproject.Service.IUserService;
+import com.peercash.PeerCashproject.Service.IService.IUserService;
 import com.peercash.PeerCashproject.Service.Impl.CloudinaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,11 +37,14 @@ public class UserController {
     })
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> registerUser (
-            @Valid
-            @RequestPart("userData") RegisterRequestDto requestDto,
-            @Parameter(description = "Imagen del documento")
+            @RequestPart("userData")
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del usuario en formato JSON")
+            @Valid RegisterRequestDto requestDto,
+
+            @Parameter(description = "Imagen del documento", required = true)
             @RequestPart("documentImage") MultipartFile documentImage,
-            @Parameter(description = "Imagen del extracto bancario")
+
+            @Parameter(description = "Imagen o pdf de constancia bancaria", required = true)
             @RequestPart("bankStatementImage") MultipartFile bankStatementImage){
         try{
 
