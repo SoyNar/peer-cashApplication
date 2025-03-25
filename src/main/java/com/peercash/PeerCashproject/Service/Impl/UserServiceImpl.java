@@ -115,4 +115,10 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    /**
+     * Un usuario aplicante solicita un prestamo
+     * llena los datos y espera que alguien pueda invertir?
+     *
+     * */
+
 }

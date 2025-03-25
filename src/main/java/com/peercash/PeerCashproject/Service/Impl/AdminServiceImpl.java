@@ -1,7 +1,6 @@
 package com.peercash.PeerCashproject.Service.Impl;
-import com.peercash.PeerCashproject.Dtos.Response.DeleteUserResponseDto;
-import com.peercash.PeerCashproject.Dtos.Response.GetAllUsersDto;
-import com.peercash.PeerCashproject.Dtos.Response.GetAuditDto;
+import com.peercash.PeerCashproject.Dtos.Response.*;
+import com.peercash.PeerCashproject.Exceptions.Custom.IBadRequestExceptions;
 import com.peercash.PeerCashproject.Exceptions.Custom.UserNotFondException;
 import com.peercash.PeerCashproject.Models.AuditEntity;
 import com.peercash.PeerCashproject.Models.User;
@@ -60,13 +59,63 @@ public class AdminServiceImpl implements IAdminService {
                 .name(user.getName())
                 .build();
     }
-
+@Transactional
     @Override
     public List<GetAuditDto> getAllAudit() {
         List<AuditEntity> auditEntities = this.auditRepository.findAll();
 
         return auditEntities.stream().map(this::mapToGetAllAudit)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * buscar user por id
+     * verificar que active sea false
+     * manejar errores
+     *
+     * */
+    @Transactional
+    @Override
+    public ActivateAccountUserDto activateUserAccount(Long userId) {
+
+        User findUserById = this.userRepository.findById(userId).orElseThrow(()
+                -> new UserNotFondException("Usuario no existe"));
+
+       if(findUserById.isActive()){
+           throw new IBadRequestExceptions("El usuario ya esta activo");
+       }
+        findUserById.setActive(true);
+        this.userRepository.save(findUserById);
+
+        return ActivateAccountUserDto.builder()
+                .activeUser(findUserById.isActive())
+                .userId(findUserById.getId())
+                .email(findUserById.getEmail())
+                .name(findUserById.getName())
+                .message("Cuenta de usuario activada exitosamente")
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public List<RequestForApprovalResponseDto> getRequestForApproval() {
+        List<User> userApproval = this.userRepository.findByActiveFalse();
+
+        return userApproval.stream().map(this::mapToRequestForApproval).collect(Collectors.toList());
+    }
+
+    private RequestForApprovalResponseDto mapToRequestForApproval(User user){
+        return  RequestForApprovalResponseDto.builder()
+                .birthday(user.getBirthday().toString())
+                .active(user.isActive())
+                .bankAccount(user.getBankAccount())
+                .document(user.getDocument())
+                .email(user.getEmail())
+                .urlBankAccount(user.getAccountBankUrl())
+                .urlDocument(user.getDocumentUrl())
+                .name(user.getName())
+                .lastname(user.getLastname())
+                .build();
     }
 
     private GetAuditDto mapToGetAllAudit(AuditEntity auditEntity){

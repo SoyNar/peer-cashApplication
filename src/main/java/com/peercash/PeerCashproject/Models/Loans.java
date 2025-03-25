@@ -23,7 +23,7 @@ public class Loans {
     @Column(nullable = false)
     private BigDecimal requestAmount;
 
-    @Column(nullable = false)
+
     private LocalDate dateApproval;
 
     @Column(nullable = false)
@@ -40,9 +40,8 @@ public class Loans {
     private LocalDate payDay;
 
     @Column(nullable = false)
+    //numero de cuotas
     private int numberOfInstallment;
-
-    private LocalDate createAt;
 
     @Column(nullable = false)
     private BigDecimal platformCommission;

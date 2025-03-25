@@ -1,8 +1,6 @@
 package com.peercash.PeerCashproject.Controllers;
 
-import com.peercash.PeerCashproject.Dtos.Response.DeleteUserResponseDto;
-import com.peercash.PeerCashproject.Dtos.Response.GetAllUsersDto;
-import com.peercash.PeerCashproject.Dtos.Response.GetAuditDto;
+import com.peercash.PeerCashproject.Dtos.Response.*;
 import com.peercash.PeerCashproject.Service.IService.IAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,5 +34,15 @@ public class AdminController {
     public ResponseEntity<List<GetAuditDto>> getALlAudit(){
         List<GetAuditDto> getAuditDtos = this.adminService.getAllAudit();
         return ResponseEntity.status(HttpStatus.OK).body(getAuditDtos);
+    }
+    @GetMapping("/for-approval")
+    public ResponseEntity<List<RequestForApprovalResponseDto>> getUserForApproval(){
+        List<RequestForApprovalResponseDto> forApprovalResponseDto = this.adminService.getRequestForApproval();
+        return ResponseEntity.status(HttpStatus.OK).body(forApprovalResponseDto);
+    }
+    @PostMapping("/activate-account/{userId}")
+    public ResponseEntity<ActivateAccountUserDto> activateAccount(Long userId){
+        ActivateAccountUserDto activateAccountDto = this.adminService.activateUserAccount(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(activateAccountDto);
     }
 }
