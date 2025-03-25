@@ -1,5 +1,7 @@
 package com.peercash.PeerCashproject.Controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.peercash.PeerCashproject.Dtos.Request.RegisterRequestDto;
 import com.peercash.PeerCashproject.Dtos.Response.RegisterResponseDto;
 import com.peercash.PeerCashproject.Service.IService.IUserService;
@@ -35,23 +37,28 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Datos inválidos", content = @Content),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> registerUser (
-            @RequestPart("userData")
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos del usuario en formato JSON")
-            @Valid RegisterRequestDto requestDto,
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> registerUser(
+            @RequestPart("userData") String userDataJson,
 
-            @Parameter(description = "Imagen del documento", required = true)
-            @RequestPart("documentImage") MultipartFile documentImage,
+            @RequestPart("documentImage")
+            @Parameter(description = "Imagen del documento (PDF, JPG, PNG)")
+            MultipartFile documentImage,
 
-            @Parameter(description = "Imagen o pdf de constancia bancaria", required = true)
-            @RequestPart("bankStatementImage") MultipartFile bankStatementImage){
-        try{
+            @RequestPart("bankStatementImage")
+            @Parameter(description = "Imagen del extracto bancario (PDF, JPG, PNG)")
+            MultipartFile bankStatementImage)  {
 
-            RegisterResponseDto responseDto = this.userService.registerUser(requestDto,documentImage,bankStatementImage);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            RegisterRequestDto requestDto = objectMapper.readValue(userDataJson, RegisterRequestDto.class);
+
+            RegisterResponseDto responseDto = this.userService.registerUser(requestDto,
+                    documentImage,
+                    bankStatementImage);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al registrar usuario: " + e.getMessage());
         }

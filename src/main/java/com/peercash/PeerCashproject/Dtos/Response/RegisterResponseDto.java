@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Builder
 public class RegisterResponseDto {
     private Long id;
-    private String username;
     private String document;
     private String email;
     private String name;

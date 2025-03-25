@@ -85,7 +85,7 @@ public class UserServiceImpl implements IUserService {
     private RegisterResponseDto builderRegisterResponseDto(User user){
        return  RegisterResponseDto.builder()
                 .id(user.getId())
-                .username(user.getEmail())
+                .email(user.getEmail())
                 .name(user.getName())
                 .lastname(user.getLastname())
                 .birthday(user.getBirthday())
