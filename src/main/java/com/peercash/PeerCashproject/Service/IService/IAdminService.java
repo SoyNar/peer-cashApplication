@@ -1,9 +1,6 @@
 package com.peercash.PeerCashproject.Service.IService;
 
-import com.peercash.PeerCashproject.Dtos.Response.ActivateAccountUserDto;
-import com.peercash.PeerCashproject.Dtos.Response.DeleteUserResponseDto;
-import com.peercash.PeerCashproject.Dtos.Response.GetAllUsersDto;
-import com.peercash.PeerCashproject.Dtos.Response.GetAuditDto;
+import com.peercash.PeerCashproject.Dtos.Response.*;
 
 import java.util.List;
 
@@ -13,4 +10,5 @@ public interface IAdminService {
     List<GetAuditDto> getAllAudit();
     //metodo para validar un usuario, cambiar su estado de active false a active true cuando el administrador a comprobado los datos"
     ActivateAccountUserDto activateUserAccount (Long userId);
+    List<RequestForApprovalResponseDto> getRequestForApproval();
 }
