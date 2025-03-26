@@ -1,24 +1,26 @@
 package com.peercash.PeerCashproject.Controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.peercash.PeerCashproject.Dtos.Request.RegisterRequestDto;
 import com.peercash.PeerCashproject.Dtos.Response.RegisterResponseDto;
 import com.peercash.PeerCashproject.Service.IService.IUserService;
-import com.peercash.PeerCashproject.Service.Impl.CloudinaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
+import jakarta.validation.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 @RestController
@@ -27,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
     private final IUserService userService;
-    private final CloudinaryService cloudinaryService;
+    private final ObjectMapper objectMapper;
 
     @Operation(summary = "Registrar un usuario con imágenes")
     @ApiResponses(value = {
@@ -50,9 +52,18 @@ public class UserController {
             MultipartFile bankStatementImage)  {
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
+
             RegisterRequestDto requestDto = objectMapper.readValue(userDataJson, RegisterRequestDto.class);
+
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<RegisterRequestDto>> violations = validator.validate(requestDto);
+
+            if (!violations.isEmpty()) {
+                Map<String, String> errors = new HashMap<>();
+                violations.forEach(v -> errors.put(v.getPropertyPath().toString(), v.getMessage()));
+                return ResponseEntity.badRequest().body(errors);
+            }
 
             RegisterResponseDto responseDto = this.userService.registerUser(requestDto,
                     documentImage,
