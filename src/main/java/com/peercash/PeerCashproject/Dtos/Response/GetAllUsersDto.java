@@ -15,5 +15,6 @@ public class GetAllUsersDto {
     private boolean active;
     private String backAccount;
     private String email;
+    private  String role;
 
 }

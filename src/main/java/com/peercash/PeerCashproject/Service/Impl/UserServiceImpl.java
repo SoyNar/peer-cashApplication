@@ -1,10 +1,14 @@
 package com.peercash.PeerCashproject.Service.Impl;
 
+import com.peercash.PeerCashproject.Dtos.Request.ApplyLoanRequestDto;
 import com.peercash.PeerCashproject.Dtos.Request.RegisterRequestDto;
 import com.peercash.PeerCashproject.Dtos.Response.RegisterResponseDto;
 import com.peercash.PeerCashproject.Exceptions.Custom.IBadRequestExceptions;
 import com.peercash.PeerCashproject.Exceptions.Custom.RoleNotFoundException;
 import com.peercash.PeerCashproject.Exceptions.Custom.UserAlreadyExistException;
+import com.peercash.PeerCashproject.Exceptions.Custom.UserNotFondException;
+import com.peercash.PeerCashproject.Models.Applicant;
+import com.peercash.PeerCashproject.Models.Loans;
 import com.peercash.PeerCashproject.Models.Role;
 import com.peercash.PeerCashproject.Models.User;
 import com.peercash.PeerCashproject.Repository.RoleRepository;
@@ -82,6 +86,7 @@ public class UserServiceImpl implements IUserService {
 
 
 
+
     private RegisterResponseDto builderRegisterResponseDto(User user){
        return  RegisterResponseDto.builder()
                 .id(user.getId())
@@ -115,10 +120,6 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    /**
-     * Un usuario aplicante solicita un prestamo
-     * llena los datos y espera que alguien pueda invertir?
-     *
-     * */
+
 
 }
