@@ -41,6 +41,7 @@ public class LoanServiceImpl  implements ILoanService {
         if (!applicant.isActive()){
             throw new IBadRequestExceptions("el usuario no puede hacer prestamos");
         }
+        validationApplicantLoan(userId);
 
         /**
          * Verificar
@@ -87,5 +88,24 @@ public class LoanServiceImpl  implements ILoanService {
 
     }
 
+    private void validationApplicantLoan(Long applicantId){
+        if(this.loanRepository.finByApplicantIdAndStatusLoan(applicantId,StatusLoan.PENDING)){
+            throw new IBadRequestExceptions("Aun tiene prestamos pendientes");
+        }
+        if(this.loanRepository.finByApplicantIdAndStatusLoan(applicantId,StatusLoan.DELINQUENT)){
+            throw new IBadRequestExceptions("Debes un prestamo anteriror");
+        }
+    }
 
+    /**
+     * validar capacidad de endeudamiento
+     * */
+    /**
+     * metodo para establecer dias de pago
+     * */
+     /**
+      * metodo para calcular monto a pagar por dias depago
+      * teniendo en cuenta el total solicitado, el numero de cuotas
+      * el porcentaje de interes mensual
+      * */
 }
