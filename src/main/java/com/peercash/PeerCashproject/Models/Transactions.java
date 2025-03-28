@@ -39,7 +39,6 @@ public class Transactions {
     @Column(nullable = false)
     private String reference;
 
-    @Column(nullable = false)
     private String paymentMethod;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,5 +1,6 @@
 package com.peercash.PeerCashproject.Dtos.Request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,12 +15,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ApplyLoanRequestDto {
 
-
+    @NotNull(message = "No puede estar vacio")
     private String reason;
-    private String description;
-    private String details;
+    @NotNull(message = "Te falta el valor de tu prestamos")
     private BigDecimal amount;
-    private LocalDate paymentDay;
-    private int numberOfInstallment;
-    private String statusLoan;
 }

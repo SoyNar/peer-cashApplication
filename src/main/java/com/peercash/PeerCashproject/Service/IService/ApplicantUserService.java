@@ -5,5 +5,4 @@ import com.peercash.PeerCashproject.Dtos.Response.AppyLoanResponseDto;
 
 public interface ApplicantUserService {
 
-    AppyLoanResponseDto applyForALoan(ApplyLoanRequestDto applyLoanRequestDto, Long userId);
 }

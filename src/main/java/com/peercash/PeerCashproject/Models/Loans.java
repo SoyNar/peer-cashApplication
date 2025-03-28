@@ -24,11 +24,7 @@ public class Loans {
     @Column(nullable = false)
     private BigDecimal requestAmount;
 
-
     private LocalDate dateApproval;
-
-    @Enumerated(EnumType.STRING)
-    private StatusT statusTransaction;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -38,16 +34,15 @@ public class Loans {
     private String reason;
 
     @Column(nullable = false)
-    private String details;
-
-    @Column(nullable = false)
     private LocalDate payDay;
+
+    private BigDecimal monthlyIncome;
+    private BigDecimal monthlyExpenses;
 
     @Column(nullable = false)
     //numero de cuotas
     private int numberOfInstallment;
 
-    @Column(nullable = false)
     private BigDecimal platformCommission;
 
     @JoinColumn(name = "applicant_id")

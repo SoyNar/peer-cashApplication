@@ -1,16 +1,13 @@
 package com.peercash.PeerCashproject.Service.Impl;
 
-import com.peercash.PeerCashproject.Dtos.Request.ApplyLoanRequestDto;
 import com.peercash.PeerCashproject.Dtos.Request.RegisterRequestDto;
 import com.peercash.PeerCashproject.Dtos.Response.RegisterResponseDto;
+import com.peercash.PeerCashproject.Dtos.Response.SeeAllLoansResponseDto;
 import com.peercash.PeerCashproject.Exceptions.Custom.IBadRequestExceptions;
 import com.peercash.PeerCashproject.Exceptions.Custom.RoleNotFoundException;
 import com.peercash.PeerCashproject.Exceptions.Custom.UserAlreadyExistException;
-import com.peercash.PeerCashproject.Exceptions.Custom.UserNotFondException;
-import com.peercash.PeerCashproject.Models.Applicant;
-import com.peercash.PeerCashproject.Models.Loans;
-import com.peercash.PeerCashproject.Models.Role;
-import com.peercash.PeerCashproject.Models.User;
+import com.peercash.PeerCashproject.Models.*;
+import com.peercash.PeerCashproject.Repository.LoanRepository;
 import com.peercash.PeerCashproject.Repository.RoleRepository;
 import com.peercash.PeerCashproject.Repository.UserRepository;
 import com.peercash.PeerCashproject.Service.IService.IUserService;
@@ -25,6 +22,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,9 +44,19 @@ public class UserServiceImpl implements IUserService {
       if(user.isPresent()) {
           throw new UserAlreadyExistException("Error: Usuario ya existe");
       }
-      confirmData(requestDto);
+        if(this.userRepository.findByDocument(
+                requestDto.getDocument()
+        ).isPresent()){ throw new IBadRequestExceptions("Error: documento ya existe");}
+        if(this.userRepository
+                .findByBankAccount(requestDto
+                        .getBankAccount())
+                .isPresent()){throw new IBadRequestExceptions("Error:esta cuenta ya esta registrada");}
+
+
+        confirmData(requestDto);
       validateFile(documentImage);
       validateFile(bankStatementImage);
+
         try {
             Map documentResult = cloudinaryService.uploadFile(documentImage, "user_document");
             Map bankStatementResult = cloudinaryService.uploadFile(bankStatementImage, "bank_statements");
@@ -56,26 +64,32 @@ public class UserServiceImpl implements IUserService {
             String documentUrl = documentResult.get("url").toString();
             String bankStatementUrl = bankStatementResult.get("url").toString();
 
-            String roleName = requestDto.getUserType().equals("INVESTOR") ? "ROLE_INVESTOR": "ROLE_APPLICANT";
-            Role role = this.roleRepository.findByName(roleName).orElseThrow(()
-                    -> new RoleNotFoundException("Error: Rol no existe"));
+            List<Role> rolesUser = requestDto.getRoles().stream()
+                    .map(roleName -> roleRepository.findByName(roleName)
+                            .orElseThrow(() -> new RoleNotFoundException("Error: Rol no existe: " + roleName)))
+                    .collect(Collectors.toList());
 
-            List<Role> rolesUser = new ArrayList<>();
-            rolesUser.add(role);
-            User createUser = User.builder()
-                    .email(requestDto.getEmail())
-                    .active(false)
-                    .bankAccount(requestDto.getBankAccount())
-                    .birthday(requestDto.getBirthday())
-                    .document(requestDto.getDocument())
-                    .email(requestDto.getEmail())
-                    .name(requestDto.getName())
-                    .lastname(requestDto.getLastname())
-                    .roles(rolesUser)
-                    .city(requestDto.getCity())
-                    .documentUrl(documentUrl)
-                    .accountBankUrl(bankStatementUrl)
-                    .build();
+            User createUser;
+            if (rolesUser.stream().anyMatch(role -> "ROLE_INVESTOR".equalsIgnoreCase(role.getName()))) {
+                createUser = new Investor();
+            } else if(rolesUser.stream().anyMatch(role -> "ROLE_APPLICANT".equalsIgnoreCase(role.getName()))) {
+                createUser = new Applicant();
+            } else {
+                throw new IBadRequestExceptions("Error: solo puede inscribirse como aplicante o inversor");
+            }
+
+            createUser.setEmail(requestDto.getEmail());
+            createUser.setActive(false);
+            createUser.setBankAccount(requestDto.getBankAccount());
+            createUser.setBirthday(requestDto.getBirthday());
+            createUser.setDocument(requestDto.getDocument());
+            createUser.setName(requestDto.getName());
+            createUser.setLastname(requestDto.getLastname());
+            createUser.setRoles(rolesUser);
+            createUser.setCity(requestDto.getCity());
+            createUser.setDocumentUrl(documentUrl);
+            createUser.setAccountBankUrl(bankStatementUrl);
+
             this.userRepository.save(createUser);
 
             return builderRegisterResponseDto(createUser);
@@ -83,8 +97,6 @@ public class UserServiceImpl implements IUserService {
             throw new RuntimeException("Error al procesar archivos: " + e.getMessage(), e);
         }
     }
-
-
 
 
     private RegisterResponseDto builderRegisterResponseDto(User user){
@@ -102,7 +114,10 @@ public class UserServiceImpl implements IUserService {
         int age = Period.between(requestDto.getBirthday(), LocalDate.now()).getYears();
         if (age < 18 || age > 120) {
             throw new IBadRequestExceptions("Edad inválida. Debe ser mayor de edad.");
+
+
         }
+
 
     }
 

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ApplicantRepository  extends JpaRepository<Applicant,Long> {
 
     Optional<Applicant> findById(Long id);
-    @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
-    Optional<Applicant> findByRoleName(@Param("roleName") String roleName);
+    @Query("SELECT a FROM Applicant a JOIN a.roles r WHERE r.name = :roleName AND a.id = :userId")
+    Optional<Applicant> findByRoleName(@Param("roleName") String roleName,@Param("userId") Long userId);
 
 }

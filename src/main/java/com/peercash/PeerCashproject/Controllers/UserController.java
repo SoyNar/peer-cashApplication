@@ -3,6 +3,7 @@ package com.peercash.PeerCashproject.Controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peercash.PeerCashproject.Dtos.Request.RegisterRequestDto;
 import com.peercash.PeerCashproject.Dtos.Response.RegisterResponseDto;
+import com.peercash.PeerCashproject.Dtos.Response.SeeAllLoansResponseDto;
 import com.peercash.PeerCashproject.Service.IService.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

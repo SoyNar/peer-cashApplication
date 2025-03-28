@@ -21,7 +21,7 @@ import java.util.List;
 public class Applicant  extends  User{
     //saldo pendiente
     private BigDecimal outStandingBalance;
-
     @OneToMany(mappedBy = "applicant",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Loans> loans;
+
 }
