@@ -89,10 +89,10 @@ public class LoanServiceImpl  implements ILoanService {
     }
 
     private void validationApplicantLoan(Long applicantId){
-        if(this.loanRepository.finByApplicantIdAndStatusLoan(applicantId,StatusLoan.PENDING)){
+        if(this.loanRepository.findByApplicantIdAndStatusLoan(applicantId,StatusLoan.PENDING)){
             throw new IBadRequestExceptions("Aun tiene prestamos pendientes");
         }
-        if(this.loanRepository.finByApplicantIdAndStatusLoan(applicantId,StatusLoan.DELINQUENT)){
+        if(this.loanRepository.findByApplicantIdAndStatusLoan(applicantId,StatusLoan.DELINQUENT)){
             throw new IBadRequestExceptions("Debes un prestamo anteriror");
         }
     }
@@ -104,7 +104,7 @@ public class LoanServiceImpl  implements ILoanService {
      * metodo para establecer dias de pago
      * */
      /**
-      * metodo para calcular monto a pagar por dias depago
+      * metodo para calcular monto a pagar por dias de pago
       * teniendo en cuenta el total solicitado, el numero de cuotas
       * el porcentaje de interes mensual
       * */
