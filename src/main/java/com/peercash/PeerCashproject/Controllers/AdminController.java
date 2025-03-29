@@ -41,7 +41,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(forApprovalResponseDto);
     }
     @PostMapping("/activate-account/{userId}")
-    public ResponseEntity<ActivateAccountUserDto> activateAccount(Long userId){
+    public ResponseEntity<ActivateAccountUserDto> activateAccount(@PathVariable Long userId){
         ActivateAccountUserDto activateAccountDto = this.adminService.activateUserAccount(userId);
         return ResponseEntity.status(HttpStatus.OK).body(activateAccountDto);
     }

@@ -48,10 +48,6 @@ public class RegisterRequestDto {
     @JsonProperty("bankAccount")
     private String bankAccount;
 
-    @NotNull(message = "el tipo de usuario  es obligatoria")
-    @JsonProperty("userType")
-    private String userType;
-
     @NotNull(message = "El rol es obligatorio")
     @JsonProperty("roles")
     private List<String> roles;

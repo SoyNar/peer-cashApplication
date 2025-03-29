@@ -23,6 +23,7 @@ public class Investment {
     private LocalDate date;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private StatusT statusTransaction;
 
     @Column(nullable = false)

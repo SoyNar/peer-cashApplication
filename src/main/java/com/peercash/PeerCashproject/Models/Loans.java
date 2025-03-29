@@ -1,5 +1,6 @@
 package com.peercash.PeerCashproject.Models;
 
+import com.peercash.PeerCashproject.Enums.StatusLoan;
 import com.peercash.PeerCashproject.Enums.StatusT;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,27 +24,25 @@ public class Loans {
     @Column(nullable = false)
     private BigDecimal requestAmount;
 
-
     private LocalDate dateApproval;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private StatusT statusTransaction;
+    private StatusLoan statusLoan;
 
     @Column(nullable = false)
     private String reason;
 
     @Column(nullable = false)
-    private String details;
-
-    @Column(nullable = false)
     private LocalDate payDay;
+
+    private BigDecimal monthlyIncome;
+    private BigDecimal monthlyExpenses;
 
     @Column(nullable = false)
     //numero de cuotas
     private int numberOfInstallment;
 
-    @Column(nullable = false)
     private BigDecimal platformCommission;
 
     @JoinColumn(name = "applicant_id")

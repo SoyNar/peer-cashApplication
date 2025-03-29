@@ -19,8 +19,11 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("INVESTOR")
 public class Investor extends User{
+
     private BigDecimal availableBalance;
+
     private  BigDecimal totalInvested;
+
     @OneToMany(mappedBy = "investor", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Investment> investments;
 
