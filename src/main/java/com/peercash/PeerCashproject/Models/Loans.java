@@ -36,14 +36,13 @@ public class Loans {
     @Column(nullable = false)
     private LocalDate payDay;
 
-    private BigDecimal monthlyIncome;
-    private BigDecimal monthlyExpenses;
-
     @Column(nullable = false)
     //numero de cuotas
     private int numberOfInstallment;
 
     private BigDecimal platformCommission;
+    private BigDecimal monthlyInstallment;
+    private BigDecimal totalDue;
 
     @JoinColumn(name = "applicant_id")
     @ManyToOne(fetch = FetchType.LAZY)
