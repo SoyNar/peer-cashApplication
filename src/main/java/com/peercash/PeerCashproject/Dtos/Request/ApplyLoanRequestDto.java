@@ -19,4 +19,5 @@ public class ApplyLoanRequestDto {
     private String reason;
     @NotNull(message = "Te falta el valor de tu prestamos")
     private BigDecimal amount;
+    private int numberOfInstallments;
 }

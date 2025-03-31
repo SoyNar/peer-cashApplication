@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LoanRepository extends JpaRepository<Loans, Long> {
 
-    boolean findByApplicantIdAndStatusLoan(Long applicantId, StatusLoan statusLoan);
+    boolean existsByApplicantIdAndStatusLoan(Long applicantId, StatusLoan statusLoan);
 
 }
