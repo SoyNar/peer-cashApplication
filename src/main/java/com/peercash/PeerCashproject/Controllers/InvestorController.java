@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -27,9 +28,15 @@ public class InvestorController {
     }
 
     @PutMapping("/approved-loan")
-    public ResponseEntity<String> approvedLoan(Long loanId, Long investorId) {
+    public ResponseEntity<List<LocalDate>> approvedLoan(Long loanId, Long investorId) {
 
-        String status = this.investorUserService.investInALoan(loanId, investorId);
-        return  ResponseEntity.status(HttpStatus.OK).body(status);
+        List<LocalDate> dates = this.investorUserService.investInALoan(loanId, investorId);
+        return  ResponseEntity.status(HttpStatus.OK).body(dates);
+    }
+
+     @PutMapping("/reject-loan")
+    public ResponseEntity<String> rejectLoan(Long loanId, Long investorId) {
+        String message = this.investorUserService.rejectLoan(loanId,investorId);
+        return  ResponseEntity.status(HttpStatus.OK).body(message);
     }
 }

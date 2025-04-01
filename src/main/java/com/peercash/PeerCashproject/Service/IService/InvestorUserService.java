@@ -3,6 +3,7 @@ package com.peercash.PeerCashproject.Service.IService;
 
 import com.peercash.PeerCashproject.Dtos.Response.GetAllLoanPendingDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface InvestorUserService {
@@ -11,6 +12,7 @@ public interface InvestorUserService {
     /**
      * metodo para invetir en un prestamo
      * */
-    String investInALoan(Long loanId, Long investorId);
+    List<LocalDate> investInALoan(Long loanId, Long investorId);
+    String rejectLoan(Long loanId,Long investorId );
 
 }

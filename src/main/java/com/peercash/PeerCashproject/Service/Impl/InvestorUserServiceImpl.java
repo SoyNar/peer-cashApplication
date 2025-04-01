@@ -14,7 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,8 +38,9 @@ public class InvestorUserServiceImpl implements InvestorUserService
         return loans.stream().map(this::mapToGetLoanPending).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
-    public String investInALoan(Long loanId, Long investorId) {
+    public List<LocalDate> investInALoan(Long loanId, Long investorId) {
 
         Loans loan = this.loanRepository.findById(loanId).orElseThrow(()
                 -> new IBadRequestExceptions("No encontrado"));
@@ -53,15 +58,49 @@ public class InvestorUserServiceImpl implements InvestorUserService
         }
 
         loan.setStatusLoan(StatusLoan.APPROVED);
+
+        int weeks = loan.getNumberOfInstallment();
+        List<LocalDate> getPayDates= calculatePaymentDates(LocalDate.now(),weeks);
+        loan.setPayDay(LocalDate.now());
         this.loanRepository.save(loan);
-        // generar los dias de pago semanales
+        // metodo para generar los dias de pago semanales
 
-        // enviar correo electronico a usuarios
+        Map<String, Object> emailBody = new HashMap<>();
+        emailBody.put("Loan ID", loan.getId());
+        emailBody.put("Loan Amount", loan.getRequestAmount().toString());
+        emailBody.put("Investor Name", investor.getName());
+        emailBody.put("Status", "Approved");
+
        emailService.sendEmail(investor.getEmail(),
-               "Inversion en prestamo","Invertiste en un prestamo");
+               "Inversion en prestamo",emailBody);
 
 
-        return "Prestamo aprobado";
+        return getPayDates;
+    }
+
+    @Transactional
+    @Override
+    public String rejectLoan(Long loanId, Long investorId) {
+
+        Loans loan = this.loanRepository.findById(loanId).orElseThrow(()
+                -> new IBadRequestExceptions("No encontrado"));
+
+        if(!loan.getStatusLoan().equals(StatusLoan.PENDING)) {
+            throw new IBadRequestExceptions("solo puede rechazar  prestamos pendientes");
+        }
+
+        Investor  investor = this.investorRepository.findByRoleName("ROLE_INVESTOR",investorId).orElseThrow(()
+                -> new UserNotFondException("Erro: no encontrado o no tiene el rol investor"));
+
+        if(!investor.isActive()){
+            throw new IBadRequestExceptions("El usuario no puede realizar esta accion, porque su cuenta no ha sido activada");
+
+        }
+
+        loan.setStatusLoan(StatusLoan.REJECTED);
+        this.loanRepository.save(loan);
+
+        return "Accion realizada con exito";
     }
 
     private GetAllLoanPendingDto mapToGetLoanPending(Loans loans) {
@@ -72,5 +111,17 @@ public class InvestorUserServiceImpl implements InvestorUserService
                 .numberOfInstallments(loans.getNumberOfInstallment())
                 .status(loans.getStatusLoan().toString())
                 .build();
+}
+
+private List<LocalDate> calculatePaymentDates(LocalDate startDate, int weeks){
+        List<LocalDate> paymentDates = new ArrayList<>();
+        LocalDate paymentDate = startDate;
+
+    for (int i = 0; i < weeks; i++) {
+        paymentDate = paymentDate.plusWeeks(1);
+        paymentDates.add(paymentDate);
+    }
+    return paymentDates;
+
 }
 }
