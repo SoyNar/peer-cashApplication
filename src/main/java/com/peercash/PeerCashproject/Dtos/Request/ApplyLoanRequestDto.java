@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -20,4 +19,6 @@ public class ApplyLoanRequestDto {
     @NotNull(message = "Te falta el valor de tu prestamos")
     private BigDecimal amount;
     private int numberOfInstallments;
+    private BigDecimal monthlyIncome;
+    private BigDecimal monthlyExpenses;
 }

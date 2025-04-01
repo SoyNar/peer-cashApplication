@@ -35,6 +35,8 @@ public class LoanServiceImpl  implements ILoanService {
      * */
     @Override
     public AppyLoanResponseDto applyForALoan(ApplyLoanRequestDto applyLoanRequestDto, Long userId) {
+
+
         BigDecimal minimumAmount = new BigDecimal("100000");
         BigDecimal maximumAmount = new BigDecimal("2000000");
         BigDecimal requestedAmount = applyLoanRequestDto.getAmount();
@@ -66,6 +68,8 @@ public class LoanServiceImpl  implements ILoanService {
         if (requestedAmount.compareTo(minimumAmount) < 0 || requestedAmount.compareTo(maximumAmount) > 0) {
             throw new IBadRequestExceptions("Error: el mínimo debe ser 100000 y el máximo 2000000");
         }
+
+        validateDebtCapacity(applyLoanRequestDto);
 
         Loans loans = Loans.builder()
                 .applicant(applicant)
@@ -119,6 +123,37 @@ public class LoanServiceImpl  implements ILoanService {
     /**
      * validar capacidad de endeudamiento
      * */
+    private void validateDebtCapacity(ApplyLoanRequestDto requestDto){
+        BigDecimal monthlyIncome = requestDto.getMonthlyIncome();
+        BigDecimal monthlyExpenses = requestDto.getMonthlyExpenses();
+
+        if (monthlyIncome == null || monthlyExpenses == null) {
+            throw new IBadRequestExceptions("Los ingresos o los gastos no pueden ser nulos.");
+        }
+
+        if(monthlyExpenses.compareTo(monthlyIncome) > 0){
+            throw new IBadRequestExceptions("Sus gastos son mayores a sus ingresos.");
+        }
+
+        BigDecimal maxDebtPayment = monthlyIncome.multiply(new BigDecimal("0.40"));
+
+        BigDecimal interestRate = new BigDecimal("0.04");
+        BigDecimal totalDue = requestDto.getAmount().multiply(BigDecimal.ONE.add(interestRate).pow(requestDto.getNumberOfInstallments()));
+        BigDecimal monthlyLoanPayment = totalDue.divide(new BigDecimal(requestDto.getNumberOfInstallments()), 2, RoundingMode.HALF_UP);
+
+        if (monthlyLoanPayment.compareTo(maxDebtPayment) > 0) {
+            throw new IBadRequestExceptions("La cuota mensual del préstamo excede su capacidad de pago.");
+        }
+
+        BigDecimal debtToIncomeRatio = monthlyExpenses.add(monthlyLoanPayment)
+                .divide(monthlyIncome, 4, RoundingMode.HALF_UP).multiply(new BigDecimal("100"));
+
+        BigDecimal maxDTIRatio = new BigDecimal("40");
+
+        if (debtToIncomeRatio.compareTo(maxDTIRatio) > 0) {
+            throw new IBadRequestExceptions("La relación deuda-ingreso es demasiado alta, no se puede solicitar el préstamo.");
+        }
+    }
 
 
 
