@@ -2,6 +2,7 @@ package com.peercash.PeerCashproject.Service.IService;
 
 
 import com.peercash.PeerCashproject.Dtos.Response.GetAllLoanPendingDto;
+import com.peercash.PeerCashproject.Models.Investment;
 
 import java.time.LocalDate;
 import java.util.List;
