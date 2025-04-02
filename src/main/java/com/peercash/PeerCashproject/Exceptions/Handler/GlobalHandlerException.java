@@ -1,9 +1,6 @@
 package com.peercash.PeerCashproject.Exceptions.Handler;
 
-import com.peercash.PeerCashproject.Exceptions.Custom.IBadRequestExceptions;
-import com.peercash.PeerCashproject.Exceptions.Custom.RoleNotFoundException;
-import com.peercash.PeerCashproject.Exceptions.Custom.UserAlreadyExistException;
-import com.peercash.PeerCashproject.Exceptions.Custom.UserNotFondException;
+import com.peercash.PeerCashproject.Exceptions.Custom.*;
 import com.peercash.PeerCashproject.Exceptions.Dto.ErrorResponse;
 import com.peercash.PeerCashproject.Exceptions.Dto.ErrorsResponse;
 import org.springframework.http.HttpStatus;
@@ -83,5 +80,26 @@ public class GlobalHandlerException {
                   .date(LocalDate.now())
                   .build();
           return  new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedActionException.class)
+    public  ResponseEntity<ErrorResponse> unauthorizedActionExceptionHandler(UnauthorizedActionException exceptions){
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(HttpStatus.UNAUTHORIZED.value())
+                .error(exceptions.getMessage())
+                .message("UNAUTHORIZED")
+                .date(LocalDate.now())
+                .build();
+        return  new ResponseEntity<>(errorResponse,HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler(EntityNotFoundException.class)
+    public  ResponseEntity<ErrorResponse> unauthorizedActionExceptionHandler(EntityNotFoundException exceptions){
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(HttpStatus.NOT_FOUND.value())
+                .error(exceptions.getMessage())
+                .message("NOT_FOUND_ENTITY")
+                .date(LocalDate.now())
+                .build();
+        return  new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
     }
 }

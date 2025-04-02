@@ -11,6 +11,7 @@ import com.peercash.PeerCashproject.Models.Loans;
 import com.peercash.PeerCashproject.Repository.ApplicantRepository;
 import com.peercash.PeerCashproject.Repository.LoanRepository;
 import com.peercash.PeerCashproject.Service.IService.ILoanService;
+import com.peercash.PeerCashproject.Service.IService.InvestmentsUtilsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class LoanServiceImpl  implements ILoanService {
 
     private final ApplicantRepository applicantRepository;
     private final LoanRepository loanRepository;
+    private final InvestmentsUtilsService utilsService;
 
     /**
      * metodo para crear un prestamo
@@ -189,8 +191,7 @@ public class LoanServiceImpl  implements ILoanService {
     private BigDecimal calculateWeeklyPayment(BigDecimal amount, int months) {
         int weeks = months * 4;
         BigDecimal interestRate = new BigDecimal("0.04");
-        BigDecimal interestFactor = BigDecimal.ONE.add(interestRate).pow(months);
-        BigDecimal totalDue = amount.multiply(interestFactor).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalDue = this.utilsService.calculateTotalWithInterest(amount, interestRate, months);
         return totalDue.divide(new BigDecimal(weeks), 2, RoundingMode.HALF_UP);
     }
 }
