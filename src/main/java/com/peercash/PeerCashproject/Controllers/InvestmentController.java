@@ -1,5 +1,6 @@
 package com.peercash.PeerCashproject.Controllers;
 
+import com.peercash.PeerCashproject.Dtos.Response.InvestmentResponseDto;
 import com.peercash.PeerCashproject.Models.Investment;
 import com.peercash.PeerCashproject.Models.Loans;
 import com.peercash.PeerCashproject.Repository.InvestmentRepository;
@@ -21,8 +22,8 @@ public class InvestmentController {
     private final InvestmentService investmentService;
 
     @GetMapping("/investment")
-    public ResponseEntity<List<Investment>> getAllInvestmentByInvestor(Long investorId){
-        List<Loans> loans = this.investmentService.getInvestmentByInvestor(investorId);
-       return ResponseEntity.status(HttpStatus.OK).body(loans);
+    public ResponseEntity<List<InvestmentResponseDto>> getAllInvestmentByInvestor(Long investorId){
+        List<InvestmentResponseDto> investment = this.investmentService.getInvestmentByInvestor(investorId);
+       return ResponseEntity.status(HttpStatus.OK).body(investment);
     }
 }

@@ -74,11 +74,11 @@ public class InvestorUserServiceImpl implements InvestorUserService
 
         Investment createInvestment = Investment.builder()
                 .date(LocalDate.now())
-                .expectedGain(loan.getRequestAmount())
+                .expectedGain(totalGainInvestor)
                 .investor(investor)
                 .loan(loan)
-                .statusTransaction(StatusT.PENDING)
-                .expectedGain(totalGainInvestor)
+                .amount(loan.getRequestAmount())
+                .statusTransaction(StatusT.PENDING_PAYMENT)
                 .build();
         this.investmentRepository.save(createInvestment);
 
@@ -147,13 +147,11 @@ private List<LocalDate> calculatePaymentDates(LocalDate startDate, int weeks){
  * seria el 80% de  lo que deja el porcentaje de intereses
  * */
  private BigDecimal calculateGainOfInvestor( Loans loan){
-     BigDecimal interestRate = new BigDecimal("0.04");
-     BigDecimal amount = loan.getRequestAmount();
-     int numberOfInstallments = loan.getNumberOfInstallment();
+     BigDecimal amount = loan.getTotalDue();
 
-     BigDecimal totalWithInterest= this.utilsService.calculateTotalWithInterest(amount, interestRate, numberOfInstallments);
-     BigDecimal totalInterest = totalWithInterest.subtract(amount);
-     return totalInterest.multiply(new BigDecimal("0.80")).setScale(2, RoundingMode.HALF_UP);
+     BigDecimal interestRate =amount.multiply(new BigDecimal("0.04"));
+     BigDecimal investorGain = interestRate.multiply(new BigDecimal("0.80"));
+     return investorGain.setScale(2, RoundingMode.HALF_UP);
  }
 
 

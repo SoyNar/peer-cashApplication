@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -55,6 +56,10 @@ public class RegisterRequestDto {
     @NotNull(message = "la ciudad es obligatoria")
     @JsonProperty("city")
     private String city;
+
+    private BigDecimal incomeInstallments;
+    private BigDecimal expensesInstallments;
+
 
 
 }
