@@ -31,8 +31,9 @@ public class InvestmentServiceImpl implements InvestmentService {
        return    InvestmentResponseDto.builder()
                  .loanId(investment.getLoan().getId())
                  .investmentId(investment.getId())
-                 .statusInvestment(investment.getStatusTransaction().toString())
+                 .statusPayment(investment.getStatusTransaction().toString())
                  .amount(investment.getAmount())
+                 .investorId(investment.getInvestor().getId())
                  .nameInvestor(investment.getInvestor().getName())
                  .expectGain(investment.getExpectedGain())
                  .build();

@@ -14,10 +14,8 @@ public class InvestmentResponseDto {
     private Long investorId;
     private Long loanId;
     private Long investmentId;
-    private Long applicantId;
-    private String nameApplicant;
     private String nameInvestor;
-    private String statusInvestment;
+    private String statusPayment;
     private BigDecimal expectGain;
     private BigDecimal amount;
 
