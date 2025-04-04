@@ -38,6 +38,9 @@ public class Transactions {
 
     @Column(nullable = false)
     private String reference;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loan_id")
+    private Loans loan;
 
     private String paymentMethod;
 

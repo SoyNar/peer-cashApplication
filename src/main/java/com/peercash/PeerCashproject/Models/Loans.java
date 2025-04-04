@@ -35,6 +35,8 @@ public class Loans {
 
     @Column(nullable = false)
     private LocalDate payDay;
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Transactions> transactions;
 
     @Column(nullable = false)
     //numero de cuotas
