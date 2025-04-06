@@ -35,6 +35,8 @@ public class Loans {
 
     @Column(nullable = false)
     private LocalDate payDay;
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Transactions> transactions;
 
     @Column(nullable = false)
     //numero de cuotas
@@ -43,6 +45,7 @@ public class Loans {
     private BigDecimal platformCommission;
     private BigDecimal monthlyInstallment;
     private BigDecimal totalDue;
+    private Integer paidInstallments;
 
     @JoinColumn(name = "applicant_id")
     @ManyToOne(fetch = FetchType.LAZY)
