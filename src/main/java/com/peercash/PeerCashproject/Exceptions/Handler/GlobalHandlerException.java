@@ -102,4 +102,16 @@ public class GlobalHandlerException {
                 .build();
         return  new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(InvalidOperationException.class)
+    public  ResponseEntity<ErrorResponse> InvalidOperationExceptionHandler(InvalidOperationException exceptions){
+          ErrorResponse errorResponse = ErrorResponse.builder()
+                  .code(HttpStatus.CONFLICT.value())
+                  .error(exceptions.getMessage())
+                  .message("INVALID_OPERATION")
+                  .date(LocalDate.now())
+                  .date(LocalDate.now())
+                  .build();
+          return new ResponseEntity<>(errorResponse,HttpStatus.CONFLICT);
+    }
 }

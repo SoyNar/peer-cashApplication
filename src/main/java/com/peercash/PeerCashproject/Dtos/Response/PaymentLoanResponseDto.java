@@ -18,4 +18,5 @@ public class PaymentLoanResponseDto {
     private String description;
     private BigDecimal amount;
     private String statusTransaction;
+    private String nextPaymentDate;
 }

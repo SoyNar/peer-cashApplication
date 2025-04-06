@@ -1,6 +1,7 @@
 package com.peercash.PeerCashproject.Service.Impl;
 
 import com.peercash.PeerCashproject.Dtos.Response.GetAllLoanPendingDto;
+import com.peercash.PeerCashproject.Dtos.Response.InvestInALoanResponseDto;
 import com.peercash.PeerCashproject.Enums.StatusLoan;
 import com.peercash.PeerCashproject.Enums.StatusT;
 import com.peercash.PeerCashproject.Exceptions.Custom.*;
@@ -46,7 +47,7 @@ public class InvestorUserServiceImpl implements InvestorUserService
 
     @Transactional
     @Override
-    public List<LocalDate> investInALoan(Long loanId, Long investorId) {
+    public InvestInALoanResponseDto investInALoan(Long loanId, Long investorId) {
 
         Loans loan = this.loanRepository.findById(loanId).orElseThrow(()
                 -> new EntityNotFoundException("No encontrado"));
@@ -65,9 +66,7 @@ public class InvestorUserServiceImpl implements InvestorUserService
 
         loan.setStatusLoan(StatusLoan.APPROVED);
         loan.setDateApproval(LocalDate.now());
-        int weeks = loan.getNumberOfInstallment();
-        List<LocalDate> getPayDates= calculatePaymentDates(LocalDate.now(),weeks);
-        loan.setPayDay(LocalDate.now());
+        loan.setPayDay(LocalDate.now().plusWeeks(1));
         this.loanRepository.save(loan);
 
         BigDecimal totalGainInvestor = calculateGainOfInvestor(loan);
@@ -82,17 +81,9 @@ public class InvestorUserServiceImpl implements InvestorUserService
                 .build();
         this.investmentRepository.save(createInvestment);
 
-        Map<String, Object> emailBody = new HashMap<>();
-        emailBody.put("Loan ID", loan.getId());
-        emailBody.put("Loan Amount", loan.getRequestAmount().toString());
-        emailBody.put("Investor Name", investor.getName());
-        emailBody.put("Status", "Approved");
-
-       emailService.sendEmail(investor.getEmail(),
-               "Inversion en prestamo",emailBody);
 
 
-        return getPayDates;
+        return mapToInvestInALoanResponseDto(createInvestment,loan);
     }
 
     @Transactional
@@ -130,17 +121,17 @@ public class InvestorUserServiceImpl implements InvestorUserService
                 .build();
 }
 
-private List<LocalDate> calculatePaymentDates(LocalDate startDate, int weeks){
-        List<LocalDate> paymentDates = new ArrayList<>();
-        LocalDate paymentDate = startDate;
+private InvestInALoanResponseDto mapToInvestInALoanResponseDto(Investment investment, Loans loan){
 
-    for (int i = 0; i < weeks; i++) {
-        paymentDate = paymentDate.plusWeeks(1);
-        paymentDates.add(paymentDate);
-    }
-    return paymentDates;
-
+        return InvestInALoanResponseDto.builder()
+                .investmentId(investment.getId())
+                .investorId(investment.getInvestor().getId())
+                .message("HAS INVERTIDO EN UN PRESTAMO")
+                .gain(investment.getExpectedGain())
+                .firstInstallment(loan.getPayDay())
+                .build();
 }
+
 
 /**
  * calcular la ganancia de un inversor
@@ -153,6 +144,8 @@ private List<LocalDate> calculatePaymentDates(LocalDate startDate, int weeks){
      BigDecimal investorGain = interestRate.multiply(new BigDecimal("0.80"));
      return investorGain.setScale(2, RoundingMode.HALF_UP);
  }
+
+
 
 
 }

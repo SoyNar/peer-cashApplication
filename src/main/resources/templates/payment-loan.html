@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Pago - PeerCash</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f7d046 0%, #e6c52a 100%);
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 4px solid #4CAF50;
+        }
+
+        .logo {
+            max-width: 180px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #2e7d32;
+            font-weight: 700;
+        }
+
+        .slogan {
+            font-style: italic;
+            color: #2e7d32;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .highlight {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .sender-info {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .sender-info h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .detail-box {
+            background-color: #f8fdf8;
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .detail-item {
+            padding: 10px 0;
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-item i {
+            color: #4CAF50;
+            margin-right: 12px;
+            font-size: 18px;
+            min-width: 20px;
+        }
+
+        .thank-you {
+            margin-top: 25px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #388E3C;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-size: 13px;
+            color: #666;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .social-links {
+            margin: 15px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 8px;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        /* Estilos responsivos */
+        @media screen and (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="/placeholder.svg?height=60&width=180" alt="PeerCash Logo" class="logo">
+        <h1>¡Pago Confirmado!</h1>
+        <div class="slogan">Sin diligencias aburridas</div>
+    </div>
+
+    <div class="content">
+        <div class="greeting">
+            Hola, <span class="highlight" th:text="${applicant}">Estimado Cliente</span> 👋
+        </div>
+
+        <div class="sender-info">
+            <h2>¡Excelente! Has realizado el pago de tu cuota al préstamo:</h2>
+            <span class="highlight" th:text="${loanId}">12345678</span>
+        </div>
+
+        <p><strong>Aquí están los detalles de tu pago:</strong></p>
+
+        <div class="detail-box">
+            <div class="detail-item">
+                <i>✅</i> <span>Monto de la cuota: <span class="highlight" th:text="${amount}">$500.00</span></span>
+            </div>
+            <div class="detail-item">
+                <i>✅</i> <span>Número total de cuotas: <span class="highlight" th:text="${numberOfInstallments}">12</span></span>
+            </div>
+            <div class="detail-item">
+                <i>✅</i> <span>Esta es tu cuota número: <span class="highlight" th:text="${remainingInstallments}">3</span></span>
+            </div>
+            <div class="detail-item">
+                <i>✅</i> <span>Fecha de tu próximo pago: <span class="highlight" th:text="${nextPay.format(T(java.time.format.DateTimeFormatter).ofPattern('dd/MM/yyyy HH:mm'))}">15/05/2025 12:00</span></span>
+            </div>
+            <div class="detail-item">
+                <i>✅</i> <span>Saldo restante: <span class="highlight" th:text="${amountDue}">$4,500.00</span></span>
+            </div>
+            <div class="detail-item">
+                <i>✅</i> <span>Fecha y hora de pago: <span class="highlight" th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">06/04/2025 16:48</span></span>
+            </div>
+        </div>
+
+        <p class="thank-you">¡Gracias por confiar en PeerCash! Estamos aquí para ayudarte a cumplir tus metas financieras.</p>
+
+        <a href="#" class="cta-button">Ver detalles de mi préstamo</a>
+    </div>
+
+    <div class="footer">
+        <p>Este es un mensaje automático, por favor no responda a este correo.</p>
+        <div class="social-links">
+            <a href="#">Facebook</a> •
+            <a href="#">Instagram</a> •
+            <a href="#">Twitter</a>
+        </div>
+        <p>&copy; 2025 PeerCash. Todos los derechos reservados.</p>
+        <p>Si tienes alguna pregunta, contáctanos en <a href="mailto:soporte@peercash.com" style="color: #4CAF50;">soporte@peercash.com</a></p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.peercash.PeerCashproject.Controllers;
 
 import com.peercash.PeerCashproject.Dtos.Response.GetAllLoanPendingDto;
+import com.peercash.PeerCashproject.Dtos.Response.InvestInALoanResponseDto;
 import com.peercash.PeerCashproject.Service.IService.InvestorUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -28,9 +28,8 @@ public class InvestorController {
     }
 
     @PutMapping("/approved-loan")
-    public ResponseEntity<List<LocalDate>> approvedLoan(Long loanId, Long investorId) {
-
-        List<LocalDate> dates = this.investorUserService.investInALoan(loanId, investorId);
+    public ResponseEntity<InvestInALoanResponseDto> approvedLoan(Long loanId, Long investorId) {
+        InvestInALoanResponseDto dates = this.investorUserService.investInALoan(loanId, investorId);
         return  ResponseEntity.status(HttpStatus.OK).body(dates);
     }
 

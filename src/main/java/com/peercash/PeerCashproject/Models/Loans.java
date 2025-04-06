@@ -45,6 +45,7 @@ public class Loans {
     private BigDecimal platformCommission;
     private BigDecimal monthlyInstallment;
     private BigDecimal totalDue;
+    private Integer paidInstallments;
 
     @JoinColumn(name = "applicant_id")
     @ManyToOne(fetch = FetchType.LAZY)

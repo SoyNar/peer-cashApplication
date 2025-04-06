@@ -1,19 +1,21 @@
 package com.peercash.PeerCashproject.Dtos.Response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class InvestInALoanResponseDto {
 
-    private List<LocalDate> dates;
+    private LocalDate nextPaymentDate;
     private Long investmentId;
+    private  String message;
+    private Long investorId;
+    private BigDecimal gain;
+    private LocalDate firstInstallment;
 }
