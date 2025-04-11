@@ -19,8 +19,11 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("APPLICANT")
 public class Applicant  extends  User{
-    private BigDecimal outStatingBalance;
-
+    //saldo pendiente
+    private BigDecimal outStandingBalance;
+    private BigDecimal monthlyIncome;
+    private BigDecimal monthlyExpenses;
     @OneToMany(mappedBy = "applicant",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Loans> loans;
+
 }

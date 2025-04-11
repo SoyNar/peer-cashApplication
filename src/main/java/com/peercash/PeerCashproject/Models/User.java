@@ -1,5 +1,6 @@
 package com.peercash.PeerCashproject.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,21 +26,29 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     private String lastname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String document;
+
+    private String password;
 
     @Column(nullable = false)
     private LocalDate birthday;
 
-    private boolean active;
+    private String documentUrl;
+    private String accountBankUrl;
 
-    private String typeUser;
+    private boolean active;
+    private String city;
 
     private String bankAccount;
    @ManyToMany
+   @JsonManagedReference
    @JoinTable(name="role_users",
            joinColumns={@JoinColumn(name="user_id")},
            inverseJoinColumns={@JoinColumn(name="role_id")})

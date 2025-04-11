@@ -1,5 +1,6 @@
 package com.peercash.PeerCashproject.Models;
 
+import com.peercash.PeerCashproject.Enums.StatusLoan;
 import com.peercash.PeerCashproject.Enums.StatusT;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,28 +24,28 @@ public class Loans {
     @Column(nullable = false)
     private BigDecimal requestAmount;
 
-    @Column(nullable = false)
     private LocalDate dateApproval;
 
     @Column(nullable = false)
-    private StatusT statusTransaction;
+    @Enumerated(EnumType.STRING)
+    private StatusLoan statusLoan;
 
     @Column(nullable = false)
     private String reason;
 
     @Column(nullable = false)
-    private String details;
-
-    @Column(nullable = false)
     private LocalDate payDay;
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Transactions> transactions;
 
     @Column(nullable = false)
+    //numero de cuotas
     private int numberOfInstallment;
 
-    private LocalDate createAt;
-
-    @Column(nullable = false)
     private BigDecimal platformCommission;
+    private BigDecimal monthlyInstallment;
+    private BigDecimal totalDue;
+    private Integer paidInstallments;
 
     @JoinColumn(name = "applicant_id")
     @ManyToOne(fetch = FetchType.LAZY)

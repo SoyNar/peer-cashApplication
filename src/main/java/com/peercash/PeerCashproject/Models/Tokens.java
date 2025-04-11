@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.apachecommons.CommonsLog;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,6 +25,6 @@ public class Tokens {
     private User user;
     @Column(nullable = false)
     private boolean isRevoked;
-    @Column(nullable = false)
-    private LocalDateTime expirationTime;
+    private  boolean isExpired;
+    private Date expirationTime;
 }

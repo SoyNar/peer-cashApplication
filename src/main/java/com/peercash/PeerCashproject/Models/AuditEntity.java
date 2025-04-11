@@ -20,6 +20,12 @@ public class AuditEntity {
     private String action;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
+    private String ipAddress;
+    private String userAgent;
+    private String status;
+    private String details;
+    private String description;
+    private long duration;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
