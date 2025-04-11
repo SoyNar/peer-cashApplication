@@ -59,6 +59,7 @@ public class RegisterRequestDto {
 
     private BigDecimal incomeInstallments;
     private BigDecimal expensesInstallments;
+    private String password;
 
 
 
