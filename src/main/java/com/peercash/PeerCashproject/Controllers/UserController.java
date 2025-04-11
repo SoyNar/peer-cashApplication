@@ -26,7 +26,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/api/peer-cash/auth")
+@RequestMapping("/api/peer-cash/user")
 @RequiredArgsConstructor
 public class UserController {
 

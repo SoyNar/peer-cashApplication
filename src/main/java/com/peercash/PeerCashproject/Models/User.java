@@ -35,6 +35,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String document;
 
+    private String password;
+
     @Column(nullable = false)
     private LocalDate birthday;
 

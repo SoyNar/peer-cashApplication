@@ -13,6 +13,7 @@ import com.peercash.PeerCashproject.Repository.UserRepository;
 import com.peercash.PeerCashproject.Service.IService.IUserService;
 import com.peercash.PeerCashproject.Utils.Auditable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final CloudinaryService cloudinaryService;
+    private final PasswordEncoder passwordEncoder;
 
     @Auditable(action = "REGISTER_USER", entity = "User")
     @Transactional
@@ -77,6 +79,7 @@ public class UserServiceImpl implements IUserService {
             } else {
                 throw new IBadRequestExceptions("Error: solo puede inscribirse como aplicante o inversor");
             }
+            String password = passwordEncoder.encode(requestDto.getPassword());
 
             createUser.setEmail(requestDto.getEmail());
             createUser.setActive(false);
@@ -89,6 +92,7 @@ public class UserServiceImpl implements IUserService {
             createUser.setCity(requestDto.getCity());
             createUser.setDocumentUrl(documentUrl);
             createUser.setAccountBankUrl(bankStatementUrl);
+            createUser.setPassword(password);
 
             this.userRepository.save(createUser);
 
