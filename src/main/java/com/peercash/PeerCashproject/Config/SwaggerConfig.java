@@ -16,9 +16,10 @@ import org.springframework.context.annotation.Bean;
                 description = "API para la gestión de préstamos entre aplicantes e inversores en una plataforma P2P. La aplicación permite a los usuarios solicitar, aprobar y rechazar préstamos de manera rápida y sencilla. Los roles involucrados incluyen aplicantes, inversores y administradores, quienes gestionan y supervisan las solicitudes de préstamos.  Esta plataforma está dirigida al mercado colombiano .",
                 version = "1.0.0",
                 contact = @io.swagger.v3.oas.annotations.info.Contact(
-                        name = "Nar",
+                        name = "Soy Nar",
                         email = "narciris.tech@gmail.com",
-                        url = "https://github.com/peercash-project")
+                        url = "https://github.com/SoyNar"
+                )
         ),
         security = @SecurityRequirement(name = "bearerAuth")
 )
