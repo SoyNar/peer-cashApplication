@@ -2,7 +2,7 @@ name: 🚀 Deploy PeerCashproject
 
 on:
   push:
-    branches: [main] # o la rama que uses para producción
+    branches: [main] # rama para producción
 
 jobs:
   deploy:

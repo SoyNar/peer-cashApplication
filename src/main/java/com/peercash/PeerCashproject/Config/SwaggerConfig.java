@@ -12,9 +12,13 @@ import org.springframework.context.annotation.Bean;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "API de Préstamos Peer-to-Peer By Nar Backend Developer",
+                title = "API de Préstamos Peer-to-Peer",
                 description = "API para la gestión de préstamos entre aplicantes e inversores en una plataforma P2P. La aplicación permite a los usuarios solicitar, aprobar y rechazar préstamos de manera rápida y sencilla. Los roles involucrados incluyen aplicantes, inversores y administradores, quienes gestionan y supervisan las solicitudes de préstamos.  Esta plataforma está dirigida al mercado colombiano .",
-                version = "1.0.0"
+                version = "1.0.0",
+                contact = @io.swagger.v3.oas.annotations.info.Contact(
+                        name = "Nar",
+                        email = "narciris.tech@gmail.com",
+                        url = "https://github.com/peercash-project")
         ),
         security = @SecurityRequirement(name = "bearerAuth")
 )
