@@ -1,68 +1,47 @@
-name: deploy in EC2
+name: 🚀 Deploy PeerCashproject
 
 on:
   push:
-    branches:
-      - main
+    branches: [main] # o la rama que uses para producción
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: ☕ Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Maven
+      - name: 📦 Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: List jar after build
-        run: ls -lh target/PeerCashproject-0.0.1-SNAPSHOT.jar
-
-      - name: Verify JAR exists in target/
-        run: |
-          echo "📁 Verificando contenido de target/"
-          ls -lh target/
-
-      - name: Deploy to EC2
+      - name: 📤 Upload jar to EC2 home directory
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           source: target/PeerCashproject-0.0.1-SNAPSHOT.jar
-          target: /opt/my-application/
+          target: /home/${{ secrets.EC2_USER }}/
 
-      - name: verificar archivo JAR
+      - name: 🚀 Move JAR with sudo and restart service
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "📦 Verificando que el JAR se copió correctamente:"
-            ls -lh /opt/my-application/PeerCashproject-0.0.1-SNAPSHOT.jar
-            echo "🔍 Permisos en el directorio /opt/my-application:"
-            ls -ld /opt/my-application/
-
-      - name: Restart systemd service and verify deployment
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "📦 Verificando JAR desplegado:"
-            ls -lh /opt/my-application/PeerCashproject-0.0.1-SNAPSHOT.jar
+            echo "📦 Moviendo JAR con sudo..."
+            sudo mv /home/${{ secrets.EC2_USER }}/PeerCashproject-0.0.1-SNAPSHOT.jar /opt/my-application/
 
             echo "🔁 Reiniciando servicio..."
-            sudo systemctl restart my-application.service || { echo "Error al reiniciar el servicio"; exit 1; }
+            sudo systemctl restart my-application.service || { echo '❌ Error al reiniciar el servicio'; exit 1; }
 
             echo "📋 Estado del servicio:"
-            sudo systemctl status my-application.service --no-pager || { echo "Error al obtener el estado del servicio"; exit 1; }
+            sudo systemctl status my-application.service --no-pager || { echo '❌ Error al obtener el estado del servicio'; exit 1; }
