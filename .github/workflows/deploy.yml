@@ -38,7 +38,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "📦 Moviendo JAR con sudo..."
-            sudo mv /home/${{ secrets.EC2_USER }}/PeerCashproject-0.0.1-SNAPSHOT.jar /opt/my-application/
+            sudo mv /home/${{ secrets.EC2_USER }}/target/PeerCashproject-0.0.1-SNAPSHOT.jar /opt/my-application/
 
             echo "🔁 Reiniciando servicio..."
             sudo systemctl restart my-application.service || { echo '❌ Error al reiniciar el servicio'; exit 1; }
